@@ -2,7 +2,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
-public class App {
+
+public class concurrent {
 
     public static void main(String[] args) {
         String[] imagenesUrls = {"https://i.pinimg.com/originals/58/66/74/58667422006989cb3a79710e4db301a6.gif",
@@ -13,20 +14,20 @@ public class App {
         
         long TiempoInicio = System.currentTimeMillis();
         
-        try {
-            for(String imagenesUrl : imagenesUrls) {
-                URL url = new URL(imagenesUrl);
-                ImageIO.write(ImageIO.read(url), "jpg", new File("imagen" + System.currentTimeMillis() + ".jpg"));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for(String imagenesUrl : imagenesUrls) {
+            Thread hilo = new Thread(() -> {
+                try {
+                    URL url = new URL(imagenesUrl);
+                    ImageIO.write(ImageIO.read(url), "jpg", new File("imagen" + System.currentTimeMillis() + ".jpg"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            hilo.start();
         }
         
         long TiempoFin = System.currentTimeMillis();
         long TiempoTotal = TiempoFin - TiempoInicio;
-        System.out.println("Tiempo total de ejecución: " + TiempoTotal/1000 + " segundos.");
+        System.out.println("Tiempo total de ejecución: " + TiempoTotal + " milisegundos.");
     }
-
-
-    }
-
+}
